@@ -2,6 +2,12 @@
 
 A polished frontend-only finance dashboard built for the Zorvyn Frontend Developer Intern assignment.
 
+## Live Demo
+
+After GitHub Pages is enabled, the app will be available at:
+
+`https://reethuvennam.github.io/Northstar-Finance-Dashboard/`
+
 ## Overview
 
 This project focuses on turning a simple finance tracking scenario into a clean, interactive, and reviewer-friendly dashboard. The goal was not to overbuild the app, but to show strong frontend thinking through layout, state management, component structure, interaction design, and attention to detail.
