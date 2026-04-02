@@ -1,0 +1,244 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Northstar is a responsive finance dashboard UI with role-based actions, custom charts, and smart transaction insights." />
+  <title>Northstar Finance Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero panel">
+      <div class="hero-copy-block">
+        <p class="eyebrow">Finance Dashboard UI</p>
+        <h1>Northstar money cockpit for fast, confident decisions.</h1>
+        <p class="hero-copy">A frontend-only finance dashboard that turns mock transaction data into a polished experience with role-aware actions, custom analytics, and lightweight productivity touches.</p>
+        <div id="heroMetrics" class="hero-metrics"></div>
+      </div>
+
+      <div class="hero-actions">
+        <div class="control-row">
+          <label class="role-switcher">
+            <span>Active role</span>
+            <select id="roleSelect" aria-label="Select role">
+              <option value="viewer">Viewer</option>
+              <option value="admin">Admin</option>
+            </select>
+          </label>
+          <button id="themeToggleBtn" class="ghost-button" type="button">Enable dark mode</button>
+        </div>
+
+        <article class="permission-card">
+          <p class="eyebrow">Permission snapshot</p>
+          <strong id="roleHeadline"></strong>
+          <p id="roleDescription" class="muted"></p>
+        </article>
+
+        <div class="hero-export">
+          <button id="exportJsonBtn" class="ghost-button" type="button">Export JSON</button>
+          <button id="exportCsvBtn" class="ghost-button" type="button">Export CSV</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="panel overview-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Overview</p>
+            <h2>Financial summary</h2>
+          </div>
+          <p id="rangeLabel" class="muted"></p>
+        </div>
+        <div id="summaryCards" class="summary-grid"></div>
+      </section>
+
+      <section class="panel focus-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Control Center</p>
+            <h2>Budget pulse</h2>
+          </div>
+          <p class="muted">Signals that help a reviewer quickly understand the value of the dashboard.</p>
+        </div>
+        <div id="focusGrid" class="focus-grid"></div>
+      </section>
+
+      <section class="panel trend-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Trend</p>
+            <h2>Balance over time</h2>
+          </div>
+          <p class="muted">Cumulative monthly balance based on the active filters.</p>
+        </div>
+        <div id="trendChart" class="chart-card"></div>
+      </section>
+
+      <section class="panel breakdown-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Breakdown</p>
+            <h2>Spending by category</h2>
+          </div>
+          <p class="muted">A quick view of where money is going right now.</p>
+        </div>
+        <div id="categoryChart" class="chart-card"></div>
+      </section>
+
+      <section class="panel insights-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Insights</p>
+            <h2>What stands out</h2>
+          </div>
+          <p class="muted">Small, readable observations generated from the current transaction view.</p>
+        </div>
+        <div id="insightsGrid" class="insights-grid"></div>
+      </section>
+
+      <section class="panel transactions-section">
+        <div class="section-heading transactions-header">
+          <div>
+            <p class="eyebrow">Transactions</p>
+            <h2>Recent activity</h2>
+          </div>
+          <div class="transactions-actions">
+            <button id="resetFiltersBtn" class="ghost-button" type="button">Reset filters</button>
+            <button id="restoreSampleBtn" class="ghost-button" type="button">Restore sample data</button>
+            <button id="addTransactionBtn" class="primary-button" type="button">Add transaction</button>
+          </div>
+        </div>
+
+        <div id="rangeFilters" class="quick-filters" aria-label="Time range filters">
+          <button class="filter-chip is-active" type="button" data-range="all">All time</button>
+          <button class="filter-chip" type="button" data-range="30d">Last 30 days</button>
+          <button class="filter-chip" type="button" data-range="month">This month</button>
+        </div>
+
+        <div class="filters-grid">
+          <label>
+            <span>Search</span>
+            <input id="searchInput" type="search" placeholder="Merchant or category" />
+          </label>
+          <label>
+            <span>Type</span>
+            <select id="typeFilter">
+              <option value="all">All</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+          </label>
+          <label>
+            <span>Category</span>
+            <select id="categoryFilter">
+              <option value="all">All categories</option>
+            </select>
+          </label>
+          <label>
+            <span>Sort by</span>
+            <select id="sortSelect">
+              <option value="date-desc">Newest first</option>
+              <option value="date-asc">Oldest first</option>
+              <option value="amount-desc">Highest amount</option>
+              <option value="amount-asc">Lowest amount</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="transactions-meta">
+          <p id="tableMeta" class="muted"></p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="transactionsBody"></tbody>
+          </table>
+        </div>
+
+        <div id="emptyState" class="empty-state hidden">
+          <h3>No transactions match these filters.</h3>
+          <p>Try resetting filters, switching the time range, or restoring the seed dataset.</p>
+          <div class="empty-actions">
+            <button id="emptyResetBtn" class="ghost-button" type="button">Reset filters</button>
+            <button id="emptyRestoreBtn" class="ghost-button" type="button">Restore sample data</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="transactionDialog" class="transaction-dialog">
+    <form id="transactionForm" method="dialog">
+      <div class="dialog-header">
+        <div>
+          <p class="eyebrow">Admin action</p>
+          <h2 id="dialogTitle">Add transaction</h2>
+        </div>
+        <button id="closeDialogBtn" class="icon-button" type="button" aria-label="Close form">x</button>
+      </div>
+
+      <input id="transactionId" type="hidden" />
+
+      <div class="form-grid">
+        <label>
+          <span>Title</span>
+          <input id="titleInput" name="title" type="text" required maxlength="40" />
+        </label>
+        <label>
+          <span>Date</span>
+          <input id="dateInput" name="date" type="date" required />
+        </label>
+        <label>
+          <span>Category</span>
+          <input id="categoryInput" name="category" type="text" required maxlength="24" />
+        </label>
+        <label>
+          <span>Type</span>
+          <select id="transactionTypeInput" name="type" required>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </label>
+        <label class="amount-field">
+          <span>Amount</span>
+          <input id="amountInput" name="amount" type="number" min="1" step="0.01" required />
+        </label>
+      </div>
+
+      <div class="dialog-actions">
+        <button id="cancelDialogBtn" class="ghost-button" type="button">Cancel</button>
+        <button class="primary-button" type="submit">Save transaction</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <template id="summaryCardTemplate">
+    <article class="summary-card">
+      <div>
+        <p class="summary-label"></p>
+        <h3 class="summary-value"></h3>
+      </div>
+      <p class="summary-footnote"></p>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>

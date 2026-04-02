@@ -1,0 +1,9 @@
+﻿{
+  "name": "finance-dashboard-ui",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Finance dashboard assignment with responsive UI and frontend-only role simulation.",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
